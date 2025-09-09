@@ -24,18 +24,22 @@ public class UserRegistrationDto {
     private String password;
 
     @Schema(description = "Имя пользователя", example = "Иван")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
     private String firstName;
 
     @Schema(description = "Отчество пользователя", example = "Иванович")
+    @Size(max = 50, message = "Middle name cannot exceed 50 characters")
     private String middleName;
 
     @Schema(description = "Фамилия пользователя", example = "Иванов")
+    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
     private String lastName;
 
     @Schema(description = "Пол пользователя: MALE - мужской, FEMALE - женский", example = "MALE")
     private Gender gender;
 
     @Schema(description = "Email пользователя", example = "ivan.ivanov@example.com", format = "email")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
     @Email(message = "Email should be valid")
     private String email;
 

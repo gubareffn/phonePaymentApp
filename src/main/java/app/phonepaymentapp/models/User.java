@@ -48,19 +48,19 @@ public class User {
     /**
      * Имя пользователя
      */
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
     /**
      * Отчество
      */
-    @Column(name = "middle_name")
+    @Column(name = "middle_name", length = 50)
     private String middleName;
 
     /**
      * Фамилия
      */
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 50)
     private String lastName;
 
     /**

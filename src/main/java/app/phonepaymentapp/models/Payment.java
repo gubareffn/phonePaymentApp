@@ -34,7 +34,7 @@ public class Payment {
     /**
      * Номер телефона, на который должна быть произведена оплата
      */
-    @Column(name = "target_phone_number", nullable = false)
+    @Column(name = "target_phone_number", nullable = false, length = 12)
     private String targetPhoneNumber;
 
     /**
