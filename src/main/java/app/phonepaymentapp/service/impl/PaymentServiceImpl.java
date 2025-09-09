@@ -2,16 +2,17 @@ package app.phonepaymentapp.service.impl;
 
 import app.phonepaymentapp.dto.PaymentRequestDto;
 import app.phonepaymentapp.exception.InsufficientFundsException;
+import app.phonepaymentapp.exception.UserNotFoundException;
 import app.phonepaymentapp.models.Payment;
 import app.phonepaymentapp.models.User;
 import app.phonepaymentapp.repository.PaymentRepository;
 import app.phonepaymentapp.repository.UserRepository;
 import app.phonepaymentapp.service.PaymentService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 
 @Service
@@ -24,10 +25,18 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
+    /**
+     * Выполнение оплаты
+     *
+     * @param userLogin      логин авторизованного пользователя
+     * @param paymentRequest содержимое запроса с данными для выполнения платежа (сумма, номер получателя)
+     * @throws UserNotFoundException, если авторизованный пользователь не найден
+     */
     @Override
     @Transactional
-    public Payment makePayment(String userLogin, PaymentRequestDto paymentRequest) {
-        User userAccount = userRepository.findByLogin(userLogin);
+    public void makePayment(String userLogin, PaymentRequestDto paymentRequest) {
+        User userAccount = userRepository.findByLogin(userLogin)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + userLogin));
 
         if (userAccount.getBalance().compareTo(paymentRequest.getAmount()) < 0) {
             throw new InsufficientFundsException("Insufficient funds");
@@ -43,11 +52,19 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         userAccount.getPayments().add(response);
-        return paymentRepository.save(response);
+        paymentRepository.save(response);
     }
 
+    /**
+     * Выполнение оплаты
+     *
+     * @param userLogin логин авторизованного пользователя
+     * @throws UserNotFoundException, если авторизованный пользователь не найден
+     */
     @Override
-    public Page<Payment> getPaymentHistory(Long userId, Pageable pageable) {
-        return null;
+    public Page<Payment> getPaymentHistory(String userLogin, Pageable pageable) {
+        User userAccount = userRepository.findByLogin(userLogin)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + userLogin));
+        return paymentRepository.findByUserId(userAccount.getId(), pageable);
     }
 }

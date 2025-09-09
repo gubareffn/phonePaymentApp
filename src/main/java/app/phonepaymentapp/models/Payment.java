@@ -17,18 +17,30 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "payment")
 public class Payment {
+    /**
+     * Идентификатор платежа
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "payment_id", nullable = false)
     private Long id;
 
-    @Column(name = "date")
+    /**
+     * Дата и время выполнения платежа
+     */
+    @Column(name = "date", nullable = false)
     private LocalDateTime paymentDate;
 
-    @Column(name = "phone_number")
+    /**
+     * Номер телефона, на который должна быть произведена оплата
+     */
+    @Column(name = "target_phone_number", nullable = false)
     private String targetPhoneNumber;
 
-    @Column(name = "amount")
+    /**
+     * Сумма платежа
+     */
+    @Column(name = "amount", precision = 10, scale = 2)
     private BigDecimal amount;
 
     @JsonIgnore

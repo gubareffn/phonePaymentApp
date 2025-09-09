@@ -3,11 +3,16 @@ package app.phonepaymentapp.service;
 import app.phonepaymentapp.dto.PaymentRequestDto;
 import app.phonepaymentapp.models.Payment;
 import org.springframework.data.domain.Page;
-
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 
 public interface PaymentService {
-    Payment makePayment(String userLogin, PaymentRequestDto paymentRequest);
+    /**
+     * Выполнение оплаты
+     */
+    void makePayment(String userLogin, PaymentRequestDto paymentRequest);
 
-    Page<Payment> getPaymentHistory(Long userId, Pageable pageable);
+    /**
+     * Получение истории операций
+     */
+    Page<Payment> getPaymentHistory(String userId, Pageable pageable);
 }

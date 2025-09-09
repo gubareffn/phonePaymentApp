@@ -1,5 +1,6 @@
 package app.phonepaymentapp.service;
 
+import app.phonepaymentapp.exception.UserNotFoundException;
 import app.phonepaymentapp.models.User;
 import app.phonepaymentapp.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +18,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(username);
+        User user = userRepository.findByLogin(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getLogin())
@@ -25,5 +27,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .authorities("USER")
                 .build();
     }
-
 }
